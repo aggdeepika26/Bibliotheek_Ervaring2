@@ -1,0 +1,71 @@
+@startuml
+
+start
+   : Admin Provides Add Method;
+if (book or book info is null) then (yes)
+    :error message book info can not be null;
+    end;
+else (no)
+    : set book Id no;
+    : add book in the list;
+    end;
+@enduml
+
+
+
+@startuml
+Admin --> MainLibraryApp : Input book info
+MainLibraryApp --> BookService : addBook(Book , book)
+BookService --> BookRepository : getBookList()
+BookService <-- BookRepository : List<Book>
+BookService --> BookService : isValidBook(Book book)
+alt book not null and isValidBook true
+BookService --> BookService : add( book)
+
+else
+BookService -->  MainLibraryApp : Throw Exception
+MainLibraryApp --> MainLibraryApp : catch exception
+Admin <-- MainLibraryApp :  Book info can not be null
+end
+@enduml
+
+
+
+
+@startuml
+Admin --> MainLibraryApp : add()
+MainLibraryApp --> Admin : vraag boek info
+Admin --> MainLibraryApp : geef info van boek
+MainLibraryApp --> BookService : addBook( title, author, publishYear, typeOfBook)
+alt typeOfBook  is FictionBook
+BookService --> BookService : book = new FictionBooksBooks(title, author, publishYear, BookStatus.AVAILABLE)
+end
+alt typeOfBook  is NonFictionBook
+BookService --> BookService : book = new NonFictionBooks(title, author, publishYear, BookStatus.AVAILABLE)
+end
+alt typeOfBook  is ChildrenBook
+BookService --> BookService : book = new ChildrenBooks(title, author, publishYear, BookStatus.AVAILABLE)
+
+end
+alt typeOfBook  is Others
+BookService --> BookService : book = new Others(title, author, publishYear, BookStatus.AVAILABLE)
+end
+BookService --> BookRepository : addBook(book)
+
+BookRepository --> utils  : isValidBook(Book book)
+utils --> utils : controls book info is not empty
+alt bookInfo not null or empty
+utils --> BookRepository : true
+else book info null or empty
+utils --> BookRepository : false
+end
+alt book not null and isValidBook true
+BookRepository --> BookRepository : bookList.add(book)
+else
+BookRepository -->BookService : Throw Exception
+BookService -->  MainLibraryApp : Throw Exception
+MainLibraryApp --> MainLibraryApp : catch exception
+Admin <-- MainLibraryApp :  Book info can not be null
+end
+@enduml
+

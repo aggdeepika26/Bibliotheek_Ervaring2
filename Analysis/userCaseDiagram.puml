@@ -1,0 +1,47 @@
+@startuml
+left to right direction
+
+rectangle Use-Cases{
+(List Of all the members Sorting by date) as listMembers  #83d3f6
+(Send Warning) as sendWarning   #83d3f6
+(Search Member) as searchMember   #83d3f6
+(Update Member Info) as updateMemberInfo   #83d3f6
+(Remove Members) as removeMember   #83d3f6
+(Register Members) as memberRegister   #83d3f6
+(Renew a book) as renewBook #83d3f6
+(returnBooks) as returnBook #83d3f6
+(IssueBooks) as IssueBooks #83d3f6
+(Sort Books) as sortBooks   #83d3f6
+(Count Books) as countBooks    #83d3f6
+(Update Book Record) as updateBookRecord   #83d3f6
+(Search Books) as searchBooks   #83d3f6
+(Browse Books) as browseBooks  #83d3f6
+(Remove Books) as removeBooks #83d3f6
+(Add Books) as addBooks  #83d3f6
+(Get My Info) as info  #ffcb0c
+(Reserve Book) as reserved  #ffcb0c
+librarian --> browseBooks
+librarian --> addBooks
+librarian --> removeBooks
+librarian --> sortBooks
+librarian --> updateBookRecord
+librarian --> countBooks
+librarian --> searchMember
+librarian --> updateMemberInfo
+librarian --> listMembers
+librarian --> sendWarning
+librarian --> memberRegister
+librarian --> removeMember
+librarian --> renewBook
+librarian --> IssueBooks
+librarian--> returnBook
+librarian --> browseBooks
+librarian --> searchBooks
+
+member --> searchBooks
+member --> info
+member --> browseBooks
+member --> reserved
+
+
+@enduml

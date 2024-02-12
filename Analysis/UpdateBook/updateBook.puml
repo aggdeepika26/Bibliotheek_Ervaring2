@@ -1,0 +1,49 @@
+@startuml
+start
+   : Admin Provides update Book Method;
+
+   : Admin provides BookIdNo;
+
+if (bookId present) then (yes book present)
+    if (book info is null) then (yes)
+      : throw exception book info can not be null;
+      end;
+     else (no not null)
+
+      :set new info Title/Author/PublishYear;
+      end;
+      endif
+else(no book not present)
+    : error Message book not found;
+    end;
+
+@enduml
+
+
+@startuml
+Admin --> MainLibraryApp : provides update method
+Admin --> MainLibraryApp : provides Book no to update info
+MainLibraryApp -->BookService : updateBookInfo(bookNo)
+BookService --> BookRepository : getBookList()
+BookService <-- BookRepository : List<Book>
+alt bookNo present in the list
+BookService --> Admin : scan new Title of Book , Author of Book , Publishing Year of book
+Admin -->  BookService : provides new book info
+BookService --> BookService : updateBook(bookNo, bookTitle, bookAuthor, publishingYear)
+alt bookInfo not null
+BookService --> BookService : set new book info
+BookService --> MainLibraryApp : print new book info
+Admin <-- MainLibraryApp : info updated
+else
+BookService --> MainLibraryApp : throws Exception
+MainLibraryApp <-- MainLibraryApp : catch exception
+Admin <-- MainLibraryApp : Book info can not be null
+end
+else
+MainLibraryApp <-- BookService : error msg
+Admin <-- MainLibraryApp : Book No not present to update
+end
+
+
+
+@enduml

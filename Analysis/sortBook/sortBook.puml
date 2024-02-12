@@ -1,0 +1,45 @@
+@startuml
+start
+
+   :Admin provides sorting method by author or publish year;
+
+   if(Sorting by author name) then (yes)
+
+     : System sorts the books according to author ;
+     end;
+
+    elseif( sorting by publish year) then (yes)
+     : System sorts the books according to published year ;
+     end;
+
+    else (no )
+
+     : error msg. enter correct choice;
+      end;
+   endif
+
+@enduml
+
+@startuml
+
+Admin --> MainLibraryApp  : input sort type by Author name or Publishing year
+MainLibraryApp --> MainLibraryApp : handles user request
+MainLibraryApp --> BookService : sortTypeControl(SortAndFindKey sortKey)
+alt sortkey AUTHOR
+BookService --> BookRepository : getBookList()
+BookService <-- BookRepository : List<Book>
+BookService --> BookService : sortBookByAuthor()
+MainLibraryApp <-- BookService : print sorted List
+Admin <-- MainLibraryApp : List Sorted
+else
+alt sortkey PublishYear
+BookService --> BookRepository : getBookList()
+BookService <-- BookRepository : List<Book>
+BookService --> BookService : sortBookByPublishYear()
+MainLibraryApp <-- BookService : print sorted List
+Admin <-- MainLibraryApp : List Sorted
+else
+Admin <-- MainLibraryApp : Invalid Choice
+end
+end
+@enduml

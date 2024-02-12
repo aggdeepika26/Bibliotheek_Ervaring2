@@ -1,0 +1,34 @@
+@startuml
+
+start
+:Librarian provides memberID;
+
+if (Multiple members with the same ID?) then (yes)
+    :Display "Warning: multiple members with the same ID!;
+    stop;
+    else (no)
+    if (Member ID does not exist?) then (yes)
+    :Display "Does not exist";
+    stop;
+        else (no)
+        while (Display update menu)
+        : Print all Member information;
+        :Choose information to update:
+        - E-mail
+        - Family name
+        - First Name
+        - Password;
+        :update local copy of member;
+
+        endwhile (exit loop)
+        :Print new Member information;
+        if (new member is OK? ) then (no)
+        :Restart this method;
+        stop
+        else (yes)
+        :Update userList with
+        new member information;
+
+    stop
+
+@enduml

@@ -1,0 +1,30 @@
+@startuml
+
+
+User -> LibraryApp: User asks for a borrow
+LibraryApp-> BookService: Verify user's identity
+BookService -> Repository : getUser()
+Repository --> BookService: Retrieve user information
+
+alt User registered
+
+    BookService -> Repository: Check book availability
+    Repository --> BookService: Retrieve book availability
+    alt Book available
+        BookService-> Repository :borrowBook(int bookId)
+        Repository -> BookService: Check out the book
+        BookService --> LibraryApp: Update book status to "checked out"
+        LibraryApp --> User: user receives book and due date
+    else Book not available
+        Repository --> BookService: Book not available
+        BookService --> LibraryApp : Book not available
+        LibraryApp --> User : Message "Book not available"
+    end
+else User not registered
+    Repository --> BookService: User not found
+    BookService --> LibraryApp : User not found
+    LibraryApp --> User : Message "user not found"
+end
+
+
+@enduml

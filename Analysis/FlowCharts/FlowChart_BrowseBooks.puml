@@ -1,0 +1,10 @@
+@startuml
+
+start
+:User/Librarian initiates "browseBooks";
+:System retrieves the list of books  ;
+:User views the list of books;
+stop
+
+@enduml
+

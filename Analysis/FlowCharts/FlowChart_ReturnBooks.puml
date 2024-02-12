@@ -1,0 +1,50 @@
+@startuml
+
+start
+:User initiates a return;
+:Librarian verifies user's identity;
+:Librarian verifies the books condition and the return date;
+if((book damaged) or (delayed return))
+:Calculate fines;
+endif
+:Librarian checks in the returned book(s);
+:System updates book status to "available";
+:System records return transaction;
+:User receives confirmation message;
+stop
+
+@enduml
+
+@startuml
+
+start
+:Librarian initiates return Book;
+:Librarian verifies user's identity;
+if(User registered) then (yes)
+    :Librarian checks book status;
+    if (BookStatus = ISSUED || BORROWED) then (yes)
+        if(whereIsBook matches userId) then (yes)
+            if(book is overdue) then (yes)
+                :Message"Delayed return. Pay Fine";
+                end;
+            else (no)
+            :System registers return book;
+            :Message "book returned successfully";
+            endif
+        else (no)
+        :Message "The book is not borrowed by the user";
+        end;
+        endif
+    else (no)
+    :Message "The book is not yet borrowed.";
+    end;
+    endif
+else (no)
+:Message "User not registered";
+end;
+endif;
+stop
+
+@enduml
+
+

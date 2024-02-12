@@ -1,0 +1,38 @@
+@startuml
+
+
+Admin -> LibraryApp: initiates return
+LibraryApp -> BookService: return book
+BookService -> Repository: getUser(userId)
+Repository --> BookService : retrieve(userId)
+alt User registered
+    BookService -> Repository: check book status
+    Repository --> BookService : retrieve book status
+    alt BookStatus = ISSUED || BORROWED
+        BookService -> Repository: check book location
+        Repository --> BookService : retrieve book location
+        alt book is borrowed by user
+            BookService -> Repository: check overdue status
+            Repository --> BookService : retrieve overdue status
+            alt book is overdue
+                BookService --> LibraryApp: Message "Delayed return. Pay Fine"
+                LibraryApp --> Admin : Message "Delayed return. Pay Fine"
+            else book is not overdue
+                BookService -> Repository : returnBook(int bookId)
+                Repository --> BookService: updated book status
+                BookService --> LibraryApp: Message "Book returned successfully".
+                LibraryApp --> Admin : Success.
+            end
+        else book is not borrowed by user
+            BookService --> LibraryApp: Message "The book is not borrowed by the user"
+            BookService --> Admin : Message"The book is not borrowed by the user"
+        end
+    else BookStatus not ISSUED or BORROWED
+        BookService --> LibraryApp: Message "The book is not yet borrowed"
+        LibraryApp --> Admin : Message "The book is not yet borrowed"
+    end
+else User not registered
+    BookService --> LibraryApp: Message "User not registered"
+    LibraryApp --> Admin: Message"User not registered"
+end
+@enduml

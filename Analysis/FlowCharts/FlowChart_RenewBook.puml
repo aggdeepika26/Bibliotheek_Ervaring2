@@ -1,0 +1,32 @@
+@startuml
+
+start
+:User requests to renew the book;
+:Librarian verifies user's identity;
+if(User registered) then (yes)
+    :Librarian checks book status;
+    if (BookStatus = ISSUED || BORROWED) then (yes)
+        if(whereIsBook matches userId) then (yes)
+            if(book is overdue) then (yes)
+                :Delayed return. Book can't be issued;
+                end;
+            else (no)
+            :System extends the due date for the book;
+            :Message "Borrow period extended successfully";
+            endif
+        else (no)
+        :Message "The book is not borrowed by the user";
+        end;
+        endif
+    else (no)
+    :Message "The book is not yet borrowed.";
+    end;
+    endif
+else (no)
+:User not registered;
+end;
+endif
+stop
+
+@enduml
+

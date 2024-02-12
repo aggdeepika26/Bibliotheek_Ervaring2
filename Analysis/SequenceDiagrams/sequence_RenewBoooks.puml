@@ -1,0 +1,38 @@
+@startuml
+
+
+Admin -> LibraryApp: initiates renew book
+LibraryApp -> BookService: renewBook()
+BookService -> Repository: verify user's identity
+Repository --> BookService: retrieves userInfo(int userId)
+alt User registered
+    BookService -> Repository: check book status
+    Repository --> BookService : retrieves book status.
+    alt BookStatus = ISSUED || BORROWED
+        BookService -> Repository: check book location
+        Repository --> BookService: retrieves book location
+        alt book is borrowed by user
+            BookService -> Repository: check overdue status
+            Repository--> BookService: retrieves overdue status
+            alt book is overdue
+                BookService --> LibraryApp: "Delayed return.Fine"
+                LibraryApp --> Admin: Message "Delayed return.Fine"
+            else book is not overdue
+                BookService -> Repository: renewBook(bookId,UserId)
+                Repository --> BookService: update new dueDate
+                BookService --> LibraryApp: Message "Success"
+            end
+        else book is not borrowed by user
+            BookService --> LibraryApp: Book not borrowedby user
+            LibraryApp --> Admin: Message "not borrowed by user"
+        end
+    else BookStatus not ISSUED or BORROWED
+        BookService --> LibraryApp: book not yet borrowed
+        LibraryApp --> Admin: Message "book not uet borrowed"
+    end
+else User not registered
+    BookService --> LibraryApp: user not available.
+    LibraryApp --> Admin: Message "user not available"
+
+end
+@enduml

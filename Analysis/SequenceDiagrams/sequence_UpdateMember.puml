@@ -1,0 +1,26 @@
+@startuml
+
+Admin -> mainLibraryApp: asks to Update user information
+mainLibraryApp -> UserService:userService.UpdateMemberInfo()
+
+UserService -> UserRepository:myUserRepository.getUserList()
+UserService <-- UserRepository:<User>userList
+UserService -> UserService: make a copy of User
+Admin <--UserService: menu of choices
+alt update email
+Admin -> UserService: provide new email
+else update family name
+Admin -> UserService: provide new family name
+else update first name
+Admin -> UserService: provide new first name
+else update password
+Admin -> UserService: provide new password
+end
+UserService -> UserService: update copy of User
+
+UserService -> UserRepository:myUserRepository.removeUser(userID)
+UserService -> UserRepository:myUserRepository.addUser(userID)
+UserService <-- UserRepository
+mainLibraryApp <-- UserService
+
+@enduml

@@ -1,0 +1,155 @@
+@startuml
+
+left to right direction
+
+package utils{
+        class ScannerTools{
+            {static}namesScanner() : List<String>
+            {static}typeBookScanner() : String
+        }
+        class ValidationTools{
+            isValideBook(Book) : boolean
+        }
+    }
+package repository{
+    class BookRepository{
+        -int bookId
+        -List<Book> bookList
+        +getBookList() : List<Book>
+        +addBook(Book) : void
+        +removeBook(Book) : boolean
+    }
+    class UserRepository{
+        -int userID
+        -List<User> userList
+        -LocalDate dateOfJoiningLibrary
+        +getUserList() : List<User>
+        +addUser(User) : boolean
+        +removerUser(User) : boolean
+        +getUserInfo(User) : String
+    }
+}
+
+package service{
+    class BookService{
+        -{static} double FINE_RATE_PER_DAY
+        -UserRepository userRepository
+        -BookRepository bookRepository
+        -UserService userService
+        +BookService(BookRepository, UserRepository, UserService)
+        +addBook(String, String, int, String) : void
+        +removeBookByTitle(String) : void
+        +removeBookByID(int) : void
+        +findBookByBookAuthor(String) : Optional<Book>
+        +findBookByBookTitle(String) : List<Book>
+        +findBookByBookId(int): List<Book>
+        +sortBookByBookAuthor() : List<Book>
+        +sortBookByPublishingYear : List<Book>
+        +updateBookInfo(int) : void
+        +updateBook (int, String, String, int) : void
+        +countBooks() : int
+        +reservedBook(int, int) : boolean
+        +borrowedBooks(): void
+        +issueBook() : void
+        +renewBook() : void
+        +returnBookByBookIDNO(int) : void
+        +returnAllBooks() : void
+        +browseBooks() : void
+        +findTypeControl(FindAanSortKeys) : void
+        -calculateFine(LocalDate, LocalDate) : double
+        -addFine(double) : void
+    }
+    class UserService{
+        -UserRepository userRepository
+        -BookRepository bookRepository
+        -users List<User>
+        +UserService(UserRepository, BookRepository)
+        +addUser(String, String, String, String, String) : boolean
+        +removeUserByName(String, String) : void
+        +removeUserByID(int) : void
+        +infoUserByName(String, String) : void
+        +infoUserByID(int) : String
+        +listAllMembersByDateOfJoining() : ListUser
+        +UpdateMemberInfo() : void
+        +searchForMemberByIdNumber(int) : Optional<User>
+        +searchForMemberByLastName(String) : List<User>
+        +searchForMembersByFirstName(Stringà : List<User>
+    }
+}
+
+package "model"{
+    package "book"{
+    Book <-- ChildrenBook
+    Book <-- FictionBook
+    Book <-- NonFictionBook
+    Book <-- OtherBook
+        abstract class Book{
+            -int bookPublishYear
+            -int bookIDNO
+            -String bookAuthor
+            -String bookTitle
+            -LocalDate dueDate
+            -LocalDate issueDate
+            -User whereIsTheBook
+            -User bookReservedBy
+            -BookStatus status
+            +Book()
+            +Book(String, String, int, int)
+            __SIMPLE GETTERS AND SETTERS__
+            +toString() : String
+        }
+        class ChildrenBook{
+            +ChildrenBook(String, String, int, Status)
+        }
+        class FictionBook{
+            +FictionBook(String, String, int, Status)
+        }
+        class NonFictionBook{
+            +FictionBook(String, String, int, Status)
+        }
+        class OtherBook{
+            +FictionBook(String, String, int, Status)
+        }
+        Enum BookStatus{
+            AVAILABLE
+            ISSUED
+            UNAVAILABLE
+            RESERVED
+        }
+        Enum FindAanSortKeys{
+            AUTHOR
+            TITLE
+            ID
+            PUBLISHING_YEAR
+        }
+    }
+
+    package user{
+    User <-- Admin
+    User <-- Member
+        abstract class User{
+            -int userId
+            -double fineAmount
+            -String firstName
+            -String lastName
+            -String emailId
+            -String password
+            -String birthYear
+            -LocalDate dateOfJoiningLibrary
+            +User()
+            +User(String, String, String, String, String)
+            __SIMPLE GETTERS AND SETTERS__
+            +toString() : String
+        }
+        class Admin{
+        +Admin()
+        +Admin(String, String, String, String, String)
+        }
+        class Member{
+        +Member()
+        +Member(String, String, String, String, String)
+        }
+    }
+}
+@enduml
+

@@ -1,4 +1,4 @@
-package be.intecbrussel.model.user;
+package be.intecbrussel.model.book;
 
 
 public enum FindAndSortKeys {

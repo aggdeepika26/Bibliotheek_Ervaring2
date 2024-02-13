@@ -1,0 +1,12 @@
+@startuml
+start;
+:librarian provides memberID;
+:get list of all books that are overdue;
+    :in list of overdue books, find books with location = memberID;
+    if(list of overdue books with location=memberID is empty?) then(yes)
+    stop
+    else(no)
+    :send this list to member.emailAddress;
+    endif
+    stop
+@enduml

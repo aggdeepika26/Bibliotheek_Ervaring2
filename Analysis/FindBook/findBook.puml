@@ -1,0 +1,93 @@
+@startuml
+
+start
+
+:Admin/Member use find method;
+if(find book with author name) then (yes)
+     if(book present with author name) then (yes)
+        : return list of books ;
+        end;
+        else(no)
+        :return error msg. book not found with this author;
+        end;
+     endif
+elseif(find book with title) then (yes)
+        if(book present with this title) then (yes)
+          : return list of books ;
+          end;
+        else(no)
+          :return error msg. book not found with this title;
+          end;
+          endif
+elseif(find book with BookIdNo)  then (yes)
+         if(book present with this title) then (yes)
+            : return book ;
+             end;
+         else(no)
+             :return error msg book not found with this Id;
+             end;
+         endif
+else(no)
+        : return error message enter correct choice;
+        end;
+endif
+@enduml
+
+
+@startuml
+AdminOrMember  --> MainLibraryApp : provide find method
+AdminOrMember  --> MainLibraryApp : provide Type of finding Book  Title/Author/Book No
+MainLibraryApp --> MainLibraryApp : Handles user request
+MainLibraryApp --> BookService :  FindTypeControl(FindAndSortKeys findKey)
+alt (findKey is BookNo)
+BookService -->BookRepository : getBookList()
+BookService <-- BookRepository : List<Book>
+
+BookService --> AdminOrMember  : request for Book No
+BookService <-- AdminOrMember : gets BookNo
+BookService --> BookService : findBookByBookNo()
+
+alt Book present in list with BookNo
+BookService --> MainLibraryApp : return Book
+MainLibraryApp --> AdminOrMember : gives Book
+else
+BookService --> MainLibraryApp : sends error msg
+MainLibraryApp --> AdminOrMember : Book not found with given Id
+end
+end
+alt (findKey is BookAuthor)
+BookService -->BookRepository : getBookList()
+BookService <-- BookRepository : List<Book>
+
+BookService --> AdminOrMember  : request for Book Author
+BookService <-- AdminOrMember : gets BookAuthor
+BookService --> BookService : findBookByBookAuthor()
+alt Book present in list with BookAuthor
+BookService --> MainLibraryApp : return Book or list of books
+MainLibraryApp --> AdminOrMember : gives Book list
+else
+BookService --> MainLibraryApp : sends error msg
+MainLibraryApp --> AdminOrMember : Book not found with given author
+end
+end
+
+alt (findKey is BookTitle)
+BookService -->BookRepository : getBookList()
+BookService <-- BookRepository : List<Book>
+
+BookService --> AdminOrMember  : request for Book Title
+BookService <-- AdminOrMember : gets BookTitle
+BookService --> BookService : findBookByBookTitle()
+alt Book present in list with BookTitle
+BookService --> MainLibraryApp : return Book or list of books
+MainLibraryApp --> AdminOrMember : gives Book list
+else
+BookService --> MainLibraryApp : sends error msg
+MainLibraryApp --> AdminOrMember : Book not found with given title
+end
+end
+
+
+
+
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+start
+   :Admin Provides Count Book Method;
+   :Count total no of books;
+   end;
+@enduml
+
+
+@startuml
+Admin --> MainLibraryApp : choose count book method
+MainLibraryApp --> BookService : countBook()
+BookService --> BookRepository : getBookList()
+BookService <-- BookRepository : List<Book>
+BookService --> BookService : count Books and  returns
+MainLibraryApp <-- BookService : get count of books
+Admin <-- MainLibraryApp : gives total no books in library
+@enduml
